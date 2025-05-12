@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Grid with Control</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+</head>
+<body>
+    <div class="headline">
+        <h1>poetry is the language of the heart;</h1>
+    </div>
+    <div class="subtext">
+        <p>generate poetry! (trained on my poetry only)</p>
+    </div>
+
+    <!-- nav bar buttons --> 
+    <div class="generate-button-container">
+        <button id="generate-poetry" class="archive-button generatePoemButton">click to generate!</button>
+        <a href="index.html"><button id="generate-words" class="generate-button">⇦ return to creating</button></a>
+    </div>
+
+    <div class="subtext"> 
+        <p> <i>after clicking generate, please wait 3 seconds </i> </p>
+    </div>
+    
+    <!-- button grid (initially hidden) -->
+    <div class="button-container" id="button-container"></div>
+
+    <!-- Rectangles -->
+    <div class="rectangle-container">
+        <div class="rectangle aiContainer">
+            <div class="subtext2">
+                <p>GENERATED POETRY</p>
+
+                <p id="loading-text" style="display: none;">loading poetry...</p>
+                <p id="poetry-output"style="display: none;">happy reading! </p>
+            </div>
+        </div>
+        <div class="rectangle">
+            <!-- Image gallery -->
+            <div class="subtext2">
+                <p>SNIPPETS OF MY POETRY</p>
+            </div>
+            <div class="image-gallery">
+                <img src="my_poetry_gallery/Screenshot 2025-01-22 at 5.28.43 PM.png" alt="Image 1">
+                <img src="my_poetry_gallery/Screenshot 2025-01-22 at 5.49.13 PM.png" alt="Image 2">
+                <img src="my_poetry_gallery/Screenshot 2025-01-22 at 5.53.39 PM.png" alt="Image 3">
+                <!-- Add more images as needed -->
+            </div>
+        </div>
+    </div>
+
+    <script src="bot.js"></script> <!-- Link to external JavaScript file -->
+</body>
+</html>

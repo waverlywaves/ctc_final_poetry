@@ -1,147 +1,141 @@
-document.addEventListener("DOMContentLoaded", function() {
-    // Box 1: Disappearing words
-    const disappearingText = document.getElementById("disappearing-text");
-    const paragraphs = disappearingText.querySelectorAll("p");
-    
-    paragraphs.forEach(paragraph => {
-        const words = paragraph.textContent.split(" ");
-        paragraph.textContent = "";
-        
-        words.forEach((word, index) => {
-            const span = document.createElement("span");
-            span.textContent = word + (index < words.length - 1 ? " " : "");
-            paragraph.appendChild(span);
-            
-            // Add mouseover event to permanently hide the word
-            span.addEventListener('mouseenter', function() {
-                this.style.visibility = 'hidden';
-            });
-        });
-    });
+// Array of words to be displayed in the buttons
+const words = [
+    "golden", "heart", "bleed", "reach", "me", "love", "peace", "light", "fire", "dream", 
+    "hope", "joy", "flame", "wind", "river", "moon", "star", "wind", "sky", "soul", "truth",
+    "ing", "me", "ing", "s", "ed", "ed", "ing", "you", "me", "i", "i", "and", "with", "am",
+    "grab", "and", "a", "an", "they", "are", "she", "he", "is", "run", "walk", "swim", "drown",
+    "breathe", "breath", "whisper", "are", "she", "they", "he", "is", "are", "you", "us",
+    "let", "go", "turn", "away", "hide", "appear", "fake", "real", "realize", "enough",
+    "one", "two", "three", "infinite", "gravity", "blood", "pain", "bleak", "night", "day",
+    "sleep", "asleep", "rest", "they", "mother", "father", "sibling", "twin", "color",
+    "s", "s", "ing", "ing", "s", "ing", "the", "the", "with", "with", "without", "out",
+    "out", "around", "under", "above", "love", "love", "flame", "and", "and", "and", "and",
+    "infinite", "golden", "heart", "reach", "fire", "nightmare", "ugly", "raw", "tender", "bitter",
+    "sweet", "broken", "black", "crimson", "watercolor", "painting", "alive", "dead", "young",
+    "born", "reborn", "ed", "ing", "'s", "'s", "ing", "you", "me", "you", "us", "us", "us",
+    "again", "once", "today", "yesterday", "tomorrow", "future", "past", "black", "blue", "silver",
+    "run", "again", "with", "the", "past", "for", "for", "hand", "hand", "finger", "mouth", 
+    "sing", "ring", "pull", "push", "the", "the", "for", "run", "more", "less"
+];
 
-    // Box 2: Traveling letters
-    const travelingText = document.getElementById("traveling-text");
-    const travelParagraphs = travelingText.querySelectorAll("p");
-    
-    travelParagraphs.forEach(paragraph => {
-        const characters = paragraph.textContent.split("");
-        paragraph.textContent = "";
-        
-        characters.forEach(char => {
-            const span = document.createElement("span");
-            span.textContent = char;
-            paragraph.appendChild(span);
-            
-            span.addEventListener('mouseenter', function() {
-                // Get current position
-                const rect = this.getBoundingClientRect();
-                
-                // Create a traveling letter that will move off-screen
-                const travelingLetter = document.createElement('span');
-                travelingLetter.textContent = this.textContent;
-                travelingLetter.className = 'traveling-letter';
-                travelingLetter.style.top = rect.top + 'px';
-                travelingLetter.style.left = rect.left + 'px';
-                travelingLetter.style.fontFamily = '"Times New Roman", Times, serif';
-                travelingLetter.style.color = 'white';
-                
-                // Add to body
-                document.body.appendChild(travelingLetter);
-                
-                // Make original letter permanently invisible
-                this.style.visibility = 'hidden';
-                
-                // Remove traveling letter after animation
-                setTimeout(() => {
-                    if (document.body.contains(travelingLetter)) {
-                        document.body.removeChild(travelingLetter);
-                    }
-                }, 8000);
-            });
-        });
-    });
+// necessary elements
+const generateButton = document.getElementById('generate-words');
+const eraseButton = document.getElementById('erase-canvas');  // Select the erase button
 
-    // Box 3: Letters forming a circle and rippling outwards
-    const sentences = document.querySelectorAll('#circle-text span');
+const buttonWidth = 150; // Set a fixed width for the buttons
+const buttonHeight = 40; // Set a fixed height for the buttons
+
+// function for generating a random word grid
+function generateWordButtons() {
+    const randomWords = shuffle(words).slice(0, 40);
     
-    sentences.forEach(sentence => {
-        // Flag to track if this sentence has been animated
-        let animated = false;
+    randomWords.forEach((word, index) => {
+        const button = document.createElement('button');
+        button.classList.add('grid-button');
+        button.textContent = word;
+        button.draggable = true;
+        button.id = `btn${index + 1}`; // id for each button
         
-        sentence.addEventListener('mouseenter', function() {
-            // Prevent multiple animations on rapid mouse movements
-            if (animated) return;
-            animated = true;
-            
-            // Get the text content and position
-            const text = this.textContent;
-            const rect = this.getBoundingClientRect();
-            
-            // Center point for the circle
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            
-            // Create a container for the animated letters
-            const container = document.createElement('div');
-            container.style.position = 'fixed';
-            container.style.top = '0';
-            container.style.left = '0';
-            container.style.width = '100%';
-            container.style.height = '100%';
-            container.style.pointerEvents = 'none';
-            container.style.zIndex = '200';
-            document.body.appendChild(container);
-            
-            // Hide original text permanently
-            this.style.visibility = 'hidden';
-            
-            // Create and position each letter
-            for (let i = 0; i < text.length; i++) {
-                // Skip spaces but maintain their timing
-                if (text[i] === ' ') continue;
-                
-                // Calculate position in the original text
-                let charPos = 0;
-                for (let j = 0; j < i; j++) {
-                    charPos += this.textContent[j] === ' ' ? 3 : 9; // Approximate character width
-                }
-                
-                // Create letter element
-                const letter = document.createElement('div');
-                letter.textContent = text[i];
-                letter.className = 'letter-circle';
-                
-                // Position at original location
-                letter.style.left = (rect.left + charPos) + 'px';
-                letter.style.top = rect.top + 'px';
-                
-                // Calculate angle for this letter around the circle (spread letters evenly)
-                const angle = (i / text.length) * 360;
-                
-                // Set custom properties for the animation
-                letter.style.setProperty('--rotation', angle + 'deg');
-                letter.style.setProperty('--distance', '200px');
-                
-                // Add to container and schedule animation with staggered delay
-                container.appendChild(letter);
-                
-                // Stagger the animation start for each letter
-                setTimeout(() => {
-                    letter.style.animation = 'circle-ripple 4s ease-out forwards';
-                }, i * 50);
-            }
-            
-            // Only reset the animation flag, but don't restore visibility
-            setTimeout(() => {
-                animated = false; // Reset animation flag
-            }, 1000);
-            
-            // Remove the container after animations complete
-            setTimeout(() => {
-                if (document.body.contains(container)) {
-                    document.body.removeChild(container);
-                }
-            }, 5000);
+        // to make sure all words stay within the canvas frame 
+        const maxX = window.innerWidth - buttonWidth;
+        const maxY = window.innerHeight - buttonHeight;
+        
+        button.style.position = 'absolute'; 
+        button.style.top = `${Math.random() * maxY}px`;
+        button.style.left = `${Math.random() * maxX}px`;
+        
+        // Store the initial position before dragging
+        let offsetX = 0, offsetY = 0;
+        
+        // Add dragstart event listener to store initial mouse position
+        button.addEventListener('dragstart', (e) => {
+            offsetX = e.clientX - button.offsetLeft;
+            offsetY = e.clientY - button.offsetTop;
         });
+
+        // Handle dragging to update the button's position in real-time
+        button.addEventListener('drag', (e) => {
+            if (e.clientX === 0 && e.clientY === 0) return;  // Avoid empty drag events
+            
+            // Update button's position, ensuring it stays within the viewport
+            const newX = e.clientX - offsetX;
+            const newY = e.clientY - offsetY;
+
+            // Ensure button doesn't go outside the browser window
+            button.style.left = `${Math.max(0, Math.min(window.innerWidth - buttonWidth, newX))}px`;
+            button.style.top = `${Math.max(0, Math.min(window.innerHeight - buttonHeight, newY))}px`;
+        });
+
+        // Add dragend event listener to finalize the position
+        button.addEventListener('dragend', (e) => {
+            const dropX = e.clientX - offsetX;
+            const dropY = e.clientY - offsetY;
+
+            // Finalize the position without any delay, ensuring it's within the bounds
+            button.style.left = `${Math.max(0, Math.min(window.innerWidth - buttonWidth, dropX))}px`;
+            button.style.top = `${Math.max(0, Math.min(window.innerHeight - buttonHeight, dropY))}px`;
+        }); 
+        
+        // Append the button to the document body
+        document.body.appendChild(button);
     });
+}
+
+// my lil shuffle array 
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// event listener for generating words
+generateButton.addEventListener('click', generateWordButtons);
+
+// event listener for erase canvas
+eraseButton.addEventListener('click', () => {
+    // Select all the word buttons and remove them from the DOM
+    const buttons = document.querySelectorAll('.grid-button');
+    buttons.forEach(button => button.remove()); // Removes all the buttons
 });
+
+// drag-and-drop functionality (for anywhere on the page)
+document.body.addEventListener('dragover', (e) => {
+    e.preventDefault(); // Allow the drop
+});
+
+
+
+// Load the audio state from localStorage
+      const audioState = localStorage.getItem('audioState');
+      if (audioState === 'playing') {
+        audioPlayer.play();
+      } else if (audioState === 'paused') {
+        audioPlayer.pause();
+      }
+
+      audioContainer.appendChild(audioPlayer);
+
+      // Save the state when the audio is played or paused
+      audioPlayer.addEventListener('play', () => {
+        localStorage.setItem('audioState', 'playing');
+      });
+
+      audioPlayer.addEventListener('pause', () => {
+        localStorage.setItem('audioState', 'paused');
+      });
+
+
+  //  const d = new Date();
+   // let time = d.getTime();
+
+        // Calculate milliseconds in a year
+  //  const minute = 1000 * 60;
+  //  const hour = minute * 60;
+   // const day = hour * 24;
+   // const year = day * 365;
+
+        // Divide Time with a year
+   // const d = new Date();
+  //  let years = Math.round(d.getTime() / year);
