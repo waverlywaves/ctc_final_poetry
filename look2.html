@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+            overflow: hidden;
+        }
+
+        .photo-container {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .photo {
+            width: 250px;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: bounce 3s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+
+        .photo:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .photo:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .photo:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-50px);
+            }
+        }
+
+        .photo:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="photo-container">
+        <img src="IMG_3737.jpg" alt="Photo 1" class="photo">
+        <img src="IMG_3738.jpg" alt="Photo 2" class="photo">
+        <img src="IMG_3739.jpg" alt="Photo 3" class="photo">
+    </div>
+
+    <script>
+        // Optional JavaScript to add dynamic interaction
+        const photos = document.querySelectorAll('.photo');
+        
+        photos.forEach(photo => {
+            photo.addEventListener('click', () => {
+                photo.style.animationPlayState = 
+                    photo.style.animationPlayState === 'paused' ? 'running' : 'paused';
+            });
+        });
+    </script>
+</body>
+</html>
